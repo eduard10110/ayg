@@ -64,7 +64,8 @@ const updateTest = async (req, res) => {
 
 const getTestQuantity = async (req, res) => {
   try {
-    
+    await Product.find(Product.quantity)
+
   } catch (error) {
     console.log("error", error)
   }
