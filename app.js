@@ -5,6 +5,8 @@ const {
 const { productRouter } = require('./routers/product.router');
 const { supplierRouter } = require('./routers/supplier.router');
 const { materialRouter } = require('./routers/material.router');
+const { reagentRouter } = require('./routers/reagent.router');
+const { testRouter } = require('./routers/test.router');
 
 const app = express();
 
@@ -13,6 +15,8 @@ app.use(express.json());
 app.use('/product', productRouter)
 app.use('/supplier', supplierRouter)
 app.use('/material', materialRouter)
+app.use('/reagent', reagentRouter)
+app.use('/test', testRouter)
 
 app.use(notFoundHandler);
 
