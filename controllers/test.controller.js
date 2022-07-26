@@ -62,24 +62,24 @@ const updateTest = async (req, res) => {
   }
 }
 
-const getTestQuantity = async (req, res) => {
-  try {
-    await Product.find(Product.quantity)
-
-  } catch (error) {
-    console.log("error", error)
-  }
-}
-
 const getPossibleTestsCount = async (req, res) => {
   const {
     products,
+    expirationDate,
   } = req.body;
 
   try {
-    const existingProducts = await Promise.all(
-      products.map(product => Product.findById(product.id))
-    );
+    const existingProducts = (await Promise.all(
+      products.map(product => Product.findOne(
+          {
+            _id: product.id,
+            expirationDate: { $gte: expirationDate }
+          }
+        )
+      )
+    )).filter(product => product != null);
+
+    if (existingProducts.length != products.length) return res.status(500).json({ message: 'Not enough products' });
 
     const possibleCountOfTests = Math.min(...products.map((product, idx) => parseInt(existingProducts[idx].quantity / product.quantity)));
 
@@ -94,6 +94,5 @@ module.exports = {
   getTest,
   deleteTest,
   updateTest,
-  getTestQuantity,
   getPossibleTestsCount,
 }

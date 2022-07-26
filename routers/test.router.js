@@ -16,7 +16,6 @@ testRouter.post('/', createTest)
 testRouter.get('/:testId', getTest)
 testRouter.delete('/:testId', deleteTest)
 testRouter.put('/:testId', updateTest)
-testRouter.get('/', getTestQuantity)
 testRouter.post('/possible-count', getPossibleTestsCount);
 
 
