@@ -4,14 +4,14 @@ const createProduct = async (req, res) => {
   try {
     const {
       name,
-        type,
-        quantity,
-        unit,
-        expirationDate,
-        price,
-        supplier,
-        dateOfEntry,
-        material
+      type,
+      quantity,
+      unit,
+      expirationDate,
+      price,
+      supplier,
+      dateOfEntry,
+      material
     } = req.body
     const product = await Product.create({
       name,
@@ -77,16 +77,9 @@ const updateProduct = async (req, res) => {
   }
 }
 
-
-
-
-
-
 module.exports = {
   createProduct,
   getProduct,
   deleteProduct,
-  updateProduct
+  updateProduct,
 }
-
-

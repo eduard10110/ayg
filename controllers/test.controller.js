@@ -71,11 +71,29 @@ const getTestQuantity = async (req, res) => {
   }
 }
 
+const getPossibleTestsCount = async (req, res) => {
+  const {
+    products,
+  } = req.body;
+
+  try {
+    const existingProducts = await Promise.all(
+      products.map(product => Product.findById(product.id))
+    );
+
+    const possibleCountOfTests = Math.min(...products.map((product, idx) => parseInt(existingProducts[idx].quantity / product.quantity)));
+
+    return res.status(200).json({ count: possibleCountOfTests });
+  } catch (err) {
+    console.log('error -> ', err);
+  }
+}
 
 module.exports = {
   createTest,
   getTest,
   deleteTest,
   updateTest,
-  getTestQuantity
+  getTestQuantity,
+  getPossibleTestsCount,
 }
