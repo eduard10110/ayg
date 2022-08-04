@@ -24,20 +24,24 @@ const createProduct = async (req, res) => {
       dateOfEntry,
       material
     });
-    res.json(product)
+
+    res.status(201).json(product)
   } catch (error) {
-    console.log("errooooooooooooooooooooooooooooor", error)
+    res.status(500).json({ message: 'Something went wrong' });
   }
 }
 
 const getProduct = async (req, res) => {
   try {
     const  productId  = req.params.productId
-    const product = await Product.findById(productId)
+    const product = await Product.findById(productId);
+
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
     res.json(product)
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -45,10 +49,13 @@ const deleteProduct = async (req, res) => {
   try {
     const  productId  = req.params.productId
     const product = await Product.findByIdAndDelete(productId)
+
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
     return res.json(200, { message: "product deleted" })
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -69,11 +76,13 @@ const updateProduct = async (req, res) => {
     }
 
     await Product.findByIdAndUpdate(productId, {$set: updatedProduct})
+
+    if (!product) return res.status(404).json({ message: 'Product not found' });
     
     res.json({message: "product updated"})
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 

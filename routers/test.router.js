@@ -2,7 +2,6 @@ const { createTest,
   getTest,
   deleteTest,
   updateTest, 
-  getTestQuantity,
   getPossibleTestsCount
 } = require('../controllers/test.controller')
 
@@ -16,7 +15,7 @@ testRouter.post('/', createTest)
 testRouter.get('/:testId', getTest)
 testRouter.delete('/:testId', deleteTest)
 testRouter.put('/:testId', updateTest)
-testRouter.post('/possible-count', getPossibleTestsCount);
+testRouter.post('/:testId/possible-count', getPossibleTestsCount);
 
 
 module.exports = { testRouter }

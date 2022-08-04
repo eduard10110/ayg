@@ -8,6 +8,7 @@ const Product = new mongoose.Schema({
   expirationDate: {type: Date, required: true},
   price: {type: Number, required: true},
   supplier: {type: String, required: true},
+  storage: {type: String},
   dateOfEntry: {type: Date, required:true},
   material: {type: String}
 })

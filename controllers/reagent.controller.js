@@ -14,7 +14,7 @@ const createReagent = async (req, res) => {
 
       res.json(reagent)
   } catch (error) {
-    console.log("erooooooooooooooooooooooooor". error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -23,9 +23,10 @@ const deleteReagent = async (req, res) => {
   try {
     const reagentId = req.params.reagentId
     const reagent = await Reagent.findByIdAndDelete(reagentId)
+    if (!reagent) return res.status(404).json({ message: 'Reagent not found' });
     return res.json({message: "Reagent successfully deleted"}) 
   } catch (error) {
-    console.log("erooooooooooooooooooooooooor", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -40,9 +41,10 @@ const updateReagent = async (req, res) => {
     }
 
     await Reagent.findByIdAndUpdate(reagentId, {$set: updatedReagent})
+    if (!reagent) return res.status(404).json({ message: 'Reagent not found' });
     res.json({message: "reagent updated"})
   } catch (error) {
-    console.log("erooooooooooooooooooooooooor", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 

@@ -24,7 +24,7 @@ const createMaterial = async (req, res) => {
     });
     res.json(material)
   } catch (error) {
-    console.log("errooooooooooooooooooooooooooooor", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -32,21 +32,26 @@ const getMaterial = async (req, res) => {
   try {
     const  materialId  = req.params.materialId
     const material = await Material.findById(materialId)
+    if (!material) return res.status(404).json({ message: 'Material not found' });
     res.json(material)
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
 const deleteMaterial = async (req, res) => {
   try {
     const  materialId  = req.params.materialId
+
     const material = await Material.findByIdAndDelete(materialId)
-    return res.json(200, { message: "material deleted" })
+
+    if (!material) return res.status(404).json({ message: 'Material not found' });
+    
+    res.json({ message: "material deleted" })
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -66,11 +71,13 @@ const updateMaterial = async (req, res) => {
     }
 
     await Material.findByIdAndUpdate(materialId, {$set: updatedMaterial})
+
+    if (!material) return res.status(404).json({ message: 'Material not found' });
     
     res.json({message: "material updated"})
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 

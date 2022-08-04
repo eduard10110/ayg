@@ -12,7 +12,7 @@ const createSupplier = async (req, res) => {
     });
     res.json(supplier)
   } catch (error) {
-    console.log("erroooooooooooooooooooooooooooooor", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -23,7 +23,7 @@ const getSupplier = async (req, res) => {
     res.json(supplier)
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -34,7 +34,7 @@ const deleteSupplier = async (req, res) => {
     return res.json({ message: "supplier deleted" })
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -48,11 +48,13 @@ const updateSupplier = async (req, res) => {
     }
 
     await Supplier.findByIdAndUpdate(supplierId, {$set: updatedSupplier})
+
+    if (!updatedSupplier) return res.status(404).json({ message: 'Supplier not found' });
     
     res.json({message: "supplier updated"})
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 

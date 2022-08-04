@@ -5,18 +5,15 @@ const Product = require("../models/product.model");
 const createTest = async (req, res) => {
   try {
     const {
-      productQuantity,
-      unit,
-      quantity
+      products,
     } = req.body
     const test = await Test.create({
-      productQuantity,
-      unit,
-      quantity
+      products,
     });
     res.json(test)
   } catch (error) {
-    console.log("erroooooooooooooooooooooooooooooor", error)
+    console.log(error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -24,10 +21,11 @@ const getTest = async (req, res) => {
   try {
     const  testId  = req.params.testId
     const test = await Test.findById(testId)
+    if (!test) return res.status(404).json({ message: 'test not found' });
     res.json(test)
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -36,10 +34,11 @@ const deleteTest = async (req, res) => {
   try {
     const  testId  = req.params.testId
     const test = await Test.findByIdAndDelete(testId)
+    if (!test) return res.status(404).json({ message: 'test not found' });
     return res.json({ message: "test deleted" })
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
@@ -54,38 +53,38 @@ const updateTest = async (req, res) => {
     }
 
     await Test.findByIdAndUpdate(testId, {$set: updatedTest})
+
+    if (!test) return res.status(404).json({ message: 'test not found' });
     
     res.json({message: "test updated"})
 
   } catch (error) {
-    console.log("error", error)
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
 const getPossibleTestsCount = async (req, res) => {
   const {
-    products,
     expirationDate,
   } = req.body;
 
+  const { testId } = req.params
   try {
-    const existingProducts = (await Promise.all(
-      products.map(product => Product.findOne(
-          {
-            _id: product.id,
-            expirationDate: { $gte: expirationDate }
-          }
-        )
-      )
+    const test = await Test.findById(testId)
+    const existingQuantities = (await Promise.all(
+      test.products.map(product => Product.findOne({
+        _id: product.id,
+        expirationDate: { $gte: expirationDate }
+      }))
     )).filter(product => product != null);
+  
+    if (existingQuantities.length != test.products.length) return res.status(500).json({ message: 'Not enough products' });
 
-    if (existingProducts.length != products.length) return res.status(500).json({ message: 'Not enough products' });
-
-    const possibleCountOfTests = Math.min(...products.map((product, idx) => parseInt(existingProducts[idx].quantity / product.quantity)));
+    const possibleCountOfTests = Math.min(...test.products.map((product, idx) => parseInt(existingQuantities[idx].quantity / product.quantity)));
 
     return res.status(200).json({ count: possibleCountOfTests });
   } catch (err) {
-    console.log('error -> ', err);
+    res.status(500).json({ message: "something went wrong" })
   }
 }
 
