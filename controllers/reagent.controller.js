@@ -48,8 +48,36 @@ const updateReagent = async (req, res) => {
   }
 }
 
+const getReagent = async (req, res) => {
+  try {
+    const  reagentId  = req.params.reagentId
+    const reagent = await Reagent.findById(reagentId);
+
+    if (!reagent) return res.status(404).json({ message: 'reagent not found' });
+
+    res.json(reagent)
+
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+const getReagents = async (req, res) => {
+  try {
+    const reagents = await Reagent.find();
+
+    if (!reagents) return res.status(404).json({ messege: 'reagents not found' })
+
+    res.json(reagents)
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
 module.exports = {
   createReagent,
   deleteReagent,
-  updateReagent
+  updateReagent,
+  getReagents,
+  getReagent
 }

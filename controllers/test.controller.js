@@ -12,7 +12,6 @@ const createTest = async (req, res) => {
     });
     res.json(test)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: "something went wrong" })
   }
 }
@@ -24,6 +23,18 @@ const getTest = async (req, res) => {
     if (!test) return res.status(404).json({ message: 'test not found' });
     res.json(test)
 
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+const getTests = async (req, res) => {
+  try {
+    const tests = await Test.find();
+
+    if (!tests) return res.status(404).json({ messege: 'tests not found' })
+
+    res.json(tests)
   } catch (error) {
     res.status(500).json({ message: "something went wrong" })
   }
@@ -94,4 +105,5 @@ module.exports = {
   deleteTest,
   updateTest,
   getPossibleTestsCount,
+  getTests
 }

@@ -58,6 +58,18 @@ const updateSupplier = async (req, res) => {
   }
 }
 
+const getSuppliers = async (req, res) => {
+  try {
+    const suppliers = await Supplier.find();
+
+    if (!suppliers) return res.status(404).json({ messege: 'suppliers not found' })
+
+    res.json(suppliers)
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
 
 
 
@@ -67,5 +79,6 @@ module.exports = {
   createSupplier,
   getSupplier,
   deleteSupplier,
-  updateSupplier
+  updateSupplier,
+  getSuppliers
 }

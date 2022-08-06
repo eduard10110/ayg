@@ -40,6 +40,18 @@ const getMaterial = async (req, res) => {
   }
 }
 
+const getMaterials = async (req, res) => {
+  try {
+    const materials = await Material.find();
+
+    if (!materials) return res.status(404).json({ messege: 'materials not found' })
+
+    res.json(materials)
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
 const deleteMaterial = async (req, res) => {
   try {
     const  materialId  = req.params.materialId
@@ -90,5 +102,6 @@ module.exports = {
   createMaterial,
   getMaterial,
   deleteMaterial,
-  updateMaterial
+  updateMaterial,
+  getMaterials
 }

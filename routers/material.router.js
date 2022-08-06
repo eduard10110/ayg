@@ -1,7 +1,8 @@
 const { createMaterial,
   getMaterial,
   deleteMaterial,
-  updateMaterial } = require('../controllers/material.controller')
+  updateMaterial,
+  getMaterials } = require('../controllers/material.controller')
 
 
 const { Router } = require('express')
@@ -13,6 +14,7 @@ materialRouter.post('/', createMaterial)
 materialRouter.get('/:materialId', getMaterial)
 materialRouter.delete('/:materialId', deleteMaterial)
 materialRouter.put('/:materialId', updateMaterial)
+materialRouter.get('/', getMaterials)
 
 
 module.exports = { materialRouter }

@@ -53,8 +53,36 @@ const updateConsumable = async (req, res) => {
   }
 }
 
+const getConsumables = async (req, res) => {
+  try {
+    const consumables = await Consumable.find();
+
+    if (!consumables) return res.status(404).json({ messege: 'consumables not found' })
+
+    res.json(consumables)
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+const getConsumable = async (req, res) => {
+  try {
+    const  consumableId  = req.params.consumableId
+    const consumable = await Consumable.findById(consumableId);
+
+    if (!consumable) return res.status(404).json({ message: 'consumable not found' });
+
+    res.json(consumable)
+
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
 module.exports = {
   createConsumable,
   deleteConsumable,
-  updateConsumable
+  updateConsumable,
+  getConsumables,
+  getConsumable
 }
