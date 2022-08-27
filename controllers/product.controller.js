@@ -11,8 +11,10 @@ const createProduct = async (req, res) => {
       price,
       supplier,
       dateOfEntry,
-      material
+      material,
+      lot
     } = req.body
+
     const product = await Product.create({
       name,
       type,
@@ -22,9 +24,9 @@ const createProduct = async (req, res) => {
       price,
       supplier,
       dateOfEntry,
-      material
+      material,
+      lot
     });
-
     res.status(201).json(product)
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
@@ -84,6 +86,7 @@ const updateProduct = async (req, res) => {
       price: req.body.price,
       supplier: req.body.supplier,
       dateOfEntry: req.body.dateOfEntry,
+      lot: req.body.lot,
       material: req.body.material
     }
 

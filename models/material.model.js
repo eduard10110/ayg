@@ -6,9 +6,6 @@ const Material = new mongoose.Schema({
   quantity: {type: Number, required: true},
   unit: {type: String, required: true},
   expirationDate: {type: Date, required: true},
-  price: {type: Number, required: true},
-  supplier: {type: String, required: true},
-  dateOfEntry: {type: Date, required:true}
 })
 
 module.exports = mongoose.model('Material', Material)

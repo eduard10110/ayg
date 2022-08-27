@@ -10,7 +10,8 @@ const Product = new mongoose.Schema({
   supplier: {type: String, required: true},
   storage: {type: String},
   dateOfEntry: {type: Date, required:true},
-  material: {type: String}
+  material: {type: String},
+  lot: {type: String}
 })
 
 module.exports = mongoose.model('Product', Product)
