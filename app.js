@@ -8,6 +8,7 @@ const { materialRouter } = require('./routers/material.router');
 const { reagentRouter } = require('./routers/reagent.router');
 const { testRouter } = require('./routers/test.router');
 const { consumableRouter } = require('./routers/consumable.router');
+const { repositoryRouter } = require('./routers/repository.router');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/material', materialRouter)
 app.use('/reagent', reagentRouter)
 app.use('/test', testRouter)
 app.use('/consumable', consumableRouter)
+app.use('/repository', repositoryRouter)
 
 app.use(notFoundHandler);
 app.use(internalServerErrorHandler);
