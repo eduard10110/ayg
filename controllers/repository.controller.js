@@ -4,12 +4,12 @@ const createRepository = async (req, res) => {
   try {
       const {
         name,
-        product
+        type
       } = req.body
 
       const repository = await Repository.create({
         name,
-        product
+        type
       })
 
       res.json(repository)
@@ -37,7 +37,7 @@ const updateRepository = async (req, res) => {
 
     const updatedRepository = {
       name: req.body.name,
-      product: req.body.quantity
+      type: req.body.type
     }
 
     await Repository.findByIdAndUpdate(repositoryId, {$set: updatedRepository})
