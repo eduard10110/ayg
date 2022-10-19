@@ -1,4 +1,5 @@
 const Product = require("../models/product.model");
+const fs = require('fs');
 
 const createProduct = async (req, res) => {
   try {
@@ -6,6 +7,8 @@ const createProduct = async (req, res) => {
       name,
       type,
       quantity,
+      storage,
+      dateOfDestribution,
       unit,
       expirationDate,
       price,
@@ -19,8 +22,10 @@ const createProduct = async (req, res) => {
       name,
       type,
       quantity,
+      dateOfDestribution,
       unit,
       expirationDate,
+      storage,
       price,
       supplier,
       dateOfEntry,
@@ -48,8 +53,16 @@ const getProduct = async (req, res) => {
 }
 
 const getProducts = async (req, res) => {
+  const filterConditions = {};
+  const isStorageSpecified = req.query.isStorageSpecified;
+
   try {
-    const products = await Product.find();
+    if (isStorageSpecified) {
+      filterConditions.storage = isStorageSpecified === '1' ? { $ne: null } : null 
+    }
+
+    const products = await Product.find(filterConditions);
+  
 
     if (!products) return res.status(404).json({ messege: 'Products not found' })
 
@@ -80,7 +93,9 @@ const updateProduct = async (req, res) => {
     const updatedProduct = {
       name: req.body.name,
       type: req.body.type,
+      storage: req.body.storage,
       quantity: req.body.quantity,
+      dateOfDestribution: req.body.dateOfDestribution,
       unit: req.body.unit,
       expirationDate: req.body.expirationDate,
       price: req.body.price,
@@ -101,10 +116,28 @@ const updateProduct = async (req, res) => {
   }
 }
 
+const exportProducts = async (req, res) => {
+  console.log('export -> ');
+  try {
+    const products = await Product.find().select('-_id').select('-__v').lean();
+
+    console.log('products -> ', products);
+
+    fs.writeFileSync('report.csv', products.map(obj => Object.values(obj).map(val => val === null ? 'null' : val.toString()).reduce((acc, next) => acc += ',' + next), '').reduce((acc, next) => acc += next + '\n', ''));
+
+    return res.status(200).json({ message: 'Success' });
+  } catch (e) {
+    console.log('e -> ', e);
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+
 module.exports = {
   createProduct,
   getProduct,
   deleteProduct,
   updateProduct,
-  getProducts
+  getProducts,
+  exportProducts,
 }

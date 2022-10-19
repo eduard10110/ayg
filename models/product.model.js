@@ -11,6 +11,7 @@ const Product = new mongoose.Schema({
   storage: {type: String},
   dateOfEntry: {type: Date, required:true},
   material: {type: String},
+  dateOfDestribution: {type: Date},
   lot: {type: String}
 })
 
