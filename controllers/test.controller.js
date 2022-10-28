@@ -6,6 +6,9 @@ const createTest = async (req, res) => {
   try {
     const {
       products,
+      dateOfEntry,
+      name,
+      type
     } = req.body
     const test = await Test.create({
       products,
@@ -58,9 +61,10 @@ const updateTest = async (req, res) => {
     const testId = req.params.testId
 
     const updatedTest = {
-      productQuantity: req.body.productQuantity,
-      unit: req.body.unit,
-      quantity: req.body.quantity
+      products: req.body.products,
+      dateOfEntry: req.body.dateOfEntry,
+      name: req.body.name,
+      type: req.body.type
     }
 
     await Test.findByIdAndUpdate(testId, {$set: updatedTest})

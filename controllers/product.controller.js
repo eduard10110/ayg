@@ -1,5 +1,6 @@
 const Product = require("../models/product.model");
 const fs = require('fs');
+const excelJS = require('exceljs')
 
 const createProduct = async (req, res) => {
   try {
@@ -117,17 +118,42 @@ const updateProduct = async (req, res) => {
 }
 
 const exportProducts = async (req, res) => {
-  console.log('export -> ');
   try {
-    const products = await Product.find().select('-_id').select('-__v').lean();
+   const workbook = new excelJS.Workbook()
+   const worksheet = workbook.addWorksheet("Products")
 
-    console.log('products -> ', products);
+   worksheet.columns = [
+      {header: "name", key: "name"},
+      {header: "type", key: "type"},
+      {header: "quantity", key: "quantity"},
+      {header: "unit", key: "unit"},
+      {header: "expirationDate", key: "expirationDate"},
+      {header: "price", key: "price"},
+      {header: "supplier", key: "supplier"},
+      {header: "storage", key: "storage"},
+      {header: "dateOfEntry", key: "dateOfEntry"},
+      {header: "material", key: "material"},
+      {header: "dateOfDestribution", key: "dateOfDestribution"},
+      {header: "lot", key: "lot"},
+   ]
+   const productData = await Product.find()
+   productData.forEach((product) => {
+    worksheet.addRow(product)
+   })
+   worksheet.getRow(1).eachCell((cell) => {
+    cell.font = {bold: true}
+   })
 
-    fs.writeFileSync('report.csv', products.map(obj => Object.values(obj).map(val => val === null ? 'null' : val.toString()).reduce((acc, next) => acc += ',' + next), '').reduce((acc, next) => acc += next + '\n', ''));
+   res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+    )
+    res.setHeader("Content-Disposition", `attachment; filename=products.x1sx`)
 
-    return res.status(200).json({ message: 'Success' });
-  } catch (e) {
-    console.log('e -> ', e);
+    return workbook.x1sx.write(res).then(()=>{
+      res.status(200)
+    })
+  } catch (error) {
     res.status(500).json({ message: "something went wrong" })
   }
 }
