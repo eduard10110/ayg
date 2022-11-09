@@ -118,7 +118,13 @@ const updateProduct = async (req, res) => {
 }
 
 const exportProducts = async (req, res) => {
+  const filterConditions = {};
+  const isStorageSpecified = req.query.isStorageSpecified;
+
   try {
+    if (isStorageSpecified) {
+      filterConditions.storage = isStorageSpecified === '1' ? { $ne: null } : null 
+    }
     const products = await Product.find()
     const fields = ['name', 'type', 'quantity', 'unit', 'expirationDate', 'price', 'supplier', 'storage', 'dateOfEntry', 'material', 'dateOfDestribution', 'lot'];
     const opts = { fields };
@@ -130,7 +136,7 @@ const exportProducts = async (req, res) => {
       })
       res.status(200)
     } catch (err) {
-      console.error(err);
+      res.status(500).json({ message: "something went wrong" })
     }
   } catch (error) {
     res.status(500).json({ message: "something went wrong" })
