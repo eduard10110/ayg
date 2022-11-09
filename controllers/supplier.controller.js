@@ -4,11 +4,13 @@ const createSupplier = async (req, res) => {
   try {
     const {
       name,
-        brand
+        brand,
+        unit
     } = req.body
     const supplier = await Supplier.create({
       name,
-      brand
+      brand,
+      unit
     });
     res.json(supplier)
   } catch (error) {
@@ -44,7 +46,8 @@ const updateSupplier = async (req, res) => {
 
     const updatedSupplier = {
       name: req.body.name,
-      brand: req.body.brand
+      brand: req.body.brand,
+      unit: req.body.unit
     }
 
     await Supplier.findByIdAndUpdate(supplierId, {$set: updatedSupplier})
