@@ -5,6 +5,8 @@ const Test = new mongoose.Schema({
   name: {type: String},
   type: {type: String},
   dateOfEntry: {type: String},
+  deviceName: {type: String},
+  isMaked: {type: Boolean, default: false}
 
 })
 

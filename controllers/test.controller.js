@@ -8,10 +8,15 @@ const createTest = async (req, res) => {
       products,
       dateOfEntry,
       name,
-      type
+      type,
+      deviceName
     } = req.body
     const test = await Test.create({
       products,
+      dateOfEntry,
+      name,
+      type,
+      deviceName
     });
     res.json(test)
   } catch (error) {
@@ -88,7 +93,7 @@ const getPossibleTestsCount = async (req, res) => {
     const test = await Test.findById(testId)
     const existingQuantities = (await Promise.all(
       test.products.map(product => Product.findOne({
-        _id: product.id,
+        name: product.name,
         expirationDate: { $gte: expirationDate }
       }))
     )).filter(product => product != null);
@@ -103,10 +108,45 @@ const getPossibleTestsCount = async (req, res) => {
   }
 }
 
+const makeTest = async (req, res) => {
+  const testId = req.params.testid;
+  const {
+  expirationDate
+  } = req.body
+
+  try {
+    const test = await Test.findByIdAndUpdate(testId, {$set: {'isMaked': true }});
+    const products = test.products;
+
+    await Promise.all(products.map(product => {
+      return Product.findByIdAndUpdate(product.id, { $inc: { 'quantity': -product.quantity } });
+    }));
+
+    res.status(200).json({ message: 'Success' });
+  } catch (e) {
+    res.status(500).json({ message: 'Failed' });
+  }
+} 
+
+const getMakedTests = async (req, res) => {
+  try {
+    const tests = await Test.find({isMaked: true});
+
+    if (!tests) return res.status(404).json({ messege: 'tests not found' })
+
+    res.json(tests)
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+
 module.exports = {
   createTest,
   getTest,
+  getMakedTests,
   deleteTest,
+  makeTest,
   updateTest,
   getPossibleTestsCount,
   getTests
