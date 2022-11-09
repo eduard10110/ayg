@@ -1,5 +1,6 @@
 const Test = require("../models/test.model");
 const Product = require("../models/product.model");
+const fs = require('fs');
 
 
 const createTest = async (req, res) => {
@@ -140,6 +141,28 @@ const getMakedTests = async (req, res) => {
   }
 }
 
+const exportTests = async (req, res) => {
+
+  try {
+    const tests = await Test.find()
+    const fields = ['name' ,'products', 'id', 'dateOfEntry', 'type', 'deviceName']; 
+    const opts = { fields };
+    
+    try {
+      const csv = parse(tests, opts);
+      fs.writeFile("tests.csv", csv, function(error){
+        if (error) throw error
+      })
+      res.status(200)
+    } catch (err) {
+      res.status(500).json({ message: "something went wrong" })
+    }
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+
 
 module.exports = {
   createTest,
@@ -147,7 +170,9 @@ module.exports = {
   getMakedTests,
   deleteTest,
   makeTest,
+  exportTests,
   updateTest,
   getPossibleTestsCount,
   getTests
 }
+

@@ -2,6 +2,7 @@ const { createTest,
   getTest,
   deleteTest,
   makeTest,
+  exportTests,
   getMakedTests,
   updateTest, 
   getPossibleTestsCount,
@@ -16,7 +17,8 @@ const testRouter = Router()
 
 testRouter.post('/', createTest)
 testRouter.get('/:testId', getTest)
-testRouter.get('/make', getMakedTests)   
+testRouter.get('/make', getMakedTests)  
+testRouter.post('/export', exportTests); 
 testRouter.delete('/:testId', deleteTest)
 testRouter.put('/:testId', updateTest)
 testRouter.post('/:testId/possible-count', getPossibleTestsCount);
