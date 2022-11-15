@@ -5,7 +5,9 @@ const { createTest,
   exportTests,
   getMakedTests,
   updateTest, 
-  getPossibleTestsCount,
+  getPossibleTestsCountById,
+  getPossibleTestsCountByName,
+  exportMakedTests,
   getTests
 } = require('../controllers/test.controller')
 
@@ -21,9 +23,11 @@ testRouter.get('/make', getMakedTests)
 testRouter.post('/export', exportTests); 
 testRouter.delete('/:testId', deleteTest)
 testRouter.put('/:testId', updateTest)
-testRouter.post('/:testId/possible-count', getPossibleTestsCount);
+testRouter.post('/:testId/possible-count', getPossibleTestsCountById);
+testRouter.post('/:testId/possible-count-by-name', getPossibleTestsCountByName);
+testRouter.post('/export/maked', exportMakedTests); 
 testRouter.get('/', getTests)
-testRouter.post('/make/:testid', makeTest)
+testRouter.post('/make/makeTest', makeTest)
 
 
 module.exports = { testRouter }

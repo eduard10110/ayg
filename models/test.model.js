@@ -6,8 +6,7 @@ const Test = new mongoose.Schema({
   type: {type: String},
   dateOfEntry: {type: String},
   deviceName: {type: String},
-  isMaked: {type: Boolean, default: false}
-
+  isMaked: {type: Boolean, default: false},
 })
 
 module.exports = mongoose.model('Test', Test)

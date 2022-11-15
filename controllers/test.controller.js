@@ -84,7 +84,7 @@ const updateTest = async (req, res) => {
   }
 }
 
-const getPossibleTestsCount = async (req, res) => {
+const getPossibleTestsCountById = async (req, res) => {
   const {
     expirationDate,
   } = req.body;
@@ -94,7 +94,7 @@ const getPossibleTestsCount = async (req, res) => {
     const test = await Test.findById(testId)
     const existingQuantities = (await Promise.all(
       test.products.map(product => Product.findOne({
-        name: product.name,
+        _id: product.id,
         expirationDate: { $gte: expirationDate }
       }))
     )).filter(product => product != null);
@@ -109,22 +109,59 @@ const getPossibleTestsCount = async (req, res) => {
   }
 }
 
-const makeTest = async (req, res) => {
-  const testId = req.params.testid;
+const getPossibleTestsCountByName = async (req, res) => {
   const {
-  expirationDate
-  } = req.body
+    expirationDate,
+  } = req.body;
 
+  const { testId } = req.params
   try {
-    const test = await Test.findByIdAndUpdate(testId, {$set: {'isMaked': true }});
-    const products = test.products;
+    const test = await Test.findById(testId)
+    const existingQuantities = (await Promise.all(
+      test.products.map(product => Product.find({
+        name: product.name,
+        expirationDate: { $gte: expirationDate },
+        $group: { _id: product.name, totalQuantity: { $sum: "$quantity" } }
+      }))
+    )).filter(product => product != null);
+
+  
+    if (existingQuantities.length != test.products.length) return res.status(500).json({ message: 'Not enough products' });
+
+    const possibleCountOfTests = Math.min(...test.products.map((product, idx) => parseInt(existingQuantities[idx].totalQuantity / product.quantity)));
+
+    return res.status(200).json({ count: possibleCountOfTests });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+const makeTest = async (req, res) => {
+  try {
+    const {
+      products,
+      name,
+      type,
+      deviceName,
+      dateOfEntry
+    } = req.body
 
     await Promise.all(products.map(product => {
       return Product.findByIdAndUpdate(product.id, { $inc: { 'quantity': -product.quantity } });
     }));
+    const test = await Test.create({
+      products,
+      dateOfEntry,
+      name,
+      type,
+      deviceName,
+      isMaked: true
+    });
 
     res.status(200).json({ message: 'Success' });
   } catch (e) {
+    console.log(e)
     res.status(500).json({ message: 'Failed' });
   }
 } 
@@ -150,7 +187,28 @@ const exportTests = async (req, res) => {
     
     try {
       const csv = parse(tests, opts);
-      fs.writeFile("tests.csv", csv, function(error){
+      fs.writeFile("Downloads","tests.csv", csv, function(error){
+        if (error) throw error
+      })
+      res.status(200)
+    } catch (err) {
+      res.status(500).json({ message: "something went wrong" })
+    }
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+const exportMakedTests = async (req, res) => {
+
+  try {
+    const tests = await Test.find({isMaked: true})
+    const fields = ['name' ,'products', 'id', 'dateOfEntry', 'type', 'deviceName']; 
+    const opts = { fields };
+    
+    try {
+      const csv = parse(tests, opts);
+      fs.writeFile("Downloads","tests.csv", csv, function(error){
         if (error) throw error
       })
       res.status(200)
@@ -163,7 +221,6 @@ const exportTests = async (req, res) => {
 }
 
 
-
 module.exports = {
   createTest,
   getTest,
@@ -172,7 +229,9 @@ module.exports = {
   makeTest,
   exportTests,
   updateTest,
-  getPossibleTestsCount,
+  getPossibleTestsCountById,
+  getPossibleTestsCountByName,
+  exportMakedTests,
   getTests
 }
 
