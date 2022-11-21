@@ -19,13 +19,13 @@ const testRouter = Router()
 
 testRouter.post('/', createTest)
 testRouter.get('/:testId', getTest)
-testRouter.get('/make', getMakedTests)  
-testRouter.post('/export', exportTests); 
+testRouter.post('/make', getMakedTests)  
+testRouter.post('/make/export', exportTests); 
 testRouter.delete('/:testId', deleteTest)
 testRouter.put('/:testId', updateTest)
-testRouter.post('/:testId/possible-count', getPossibleTestsCountById);
+testRouter.post('/:testId/possible-count-by-name', getPossibleTestsCountById);
 testRouter.post('/:testId/possible-count-by-name', getPossibleTestsCountByName);
-testRouter.post('/export/maked', exportMakedTests); 
+testRouter.post('/maked/export', exportMakedTests); 
 testRouter.get('/', getTests)
 testRouter.post('/make/makeTest', makeTest)
 

@@ -1,7 +1,7 @@
 const Test = require("../models/test.model");
 const Product = require("../models/product.model");
 const fs = require('fs');
-
+const { parse } = require('json2csv');
 
 const createTest = async (req, res) => {
   try {
@@ -88,7 +88,6 @@ const getPossibleTestsCountById = async (req, res) => {
   const {
     expirationDate,
   } = req.body;
-
   const { testId } = req.params
   try {
     const test = await Test.findById(testId)
@@ -132,7 +131,6 @@ const getPossibleTestsCountByName = async (req, res) => {
 
     return res.status(200).json({ count: possibleCountOfTests });
   } catch (err) {
-    console.log(err)
     res.status(500).json({ message: "something went wrong" })
   }
 }
@@ -168,7 +166,7 @@ const makeTest = async (req, res) => {
 
 const getMakedTests = async (req, res) => {
   try {
-    const tests = await Test.find({isMaked: true});
+    const tests = await Test.find({isMaked: {$eq: true}});
 
     if (!tests) return res.status(404).json({ messege: 'tests not found' })
 
@@ -179,7 +177,6 @@ const getMakedTests = async (req, res) => {
 }
 
 const exportTests = async (req, res) => {
-
   try {
     const tests = await Test.find()
     const fields = ['name' ,'products', 'id', 'dateOfEntry', 'type', 'deviceName']; 
@@ -187,10 +184,10 @@ const exportTests = async (req, res) => {
     
     try {
       const csv = parse(tests, opts);
-      fs.writeFile("Downloads","tests.csv", csv, function(error){
+      fs.writeFile("tests.csv", csv, function(error){
         if (error) throw error
       })
-      res.status(200)
+      res.status(200).json({ message: 'Success' });
     } catch (err) {
       res.status(500).json({ message: "something went wrong" })
     }
@@ -200,18 +197,17 @@ const exportTests = async (req, res) => {
 }
 
 const exportMakedTests = async (req, res) => {
-
   try {
-    const tests = await Test.find({isMaked: true})
+    const tests = await Test.find({isMaked: {$eq: true}})
     const fields = ['name' ,'products', 'id', 'dateOfEntry', 'type', 'deviceName']; 
     const opts = { fields };
     
     try {
       const csv = parse(tests, opts);
-      fs.writeFile("Downloads","tests.csv", csv, function(error){
+      fs.writeFile("tests.csv", csv, function(error){
         if (error) throw error
       })
-      res.status(200)
+      res.status(200).json({ message: 'Success' });
     } catch (err) {
       res.status(500).json({ message: "something went wrong" })
     }
