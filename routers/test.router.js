@@ -23,7 +23,7 @@ testRouter.post('/make', getMakedTests)
 testRouter.post('/make/export', exportTests); 
 testRouter.delete('/:testId', deleteTest)
 testRouter.put('/:testId', updateTest)
-testRouter.post('/:testId/possible-count-by-name', getPossibleTestsCountById);
+testRouter.post('/:testId/possible-count-by-id', getPossibleTestsCountById);
 testRouter.post('/:testId/possible-count-by-name', getPossibleTestsCountByName);
 testRouter.post('/maked/export', exportMakedTests); 
 testRouter.get('/', getTests)
