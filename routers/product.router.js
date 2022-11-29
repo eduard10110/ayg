@@ -2,6 +2,7 @@ const { createProduct,
   getProduct,
   deleteProduct,
   updateProduct,
+  getProductsByStorage,
   getProducts,
   exportProducts,
 } = require('../controllers/product.controller')
@@ -17,7 +18,7 @@ productRouter.post('/export', exportProducts);
 productRouter.get('/:productId', getProduct)
 productRouter.delete('/:productId', deleteProduct)
 productRouter.put('/:productId', updateProduct)
-productRouter.get('/', getProducts);
-
+productRouter.get('/', getProductsByStorage);
+productRouter.get('/all', getProducts)
 
 module.exports = { productRouter }

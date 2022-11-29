@@ -53,7 +53,7 @@ const getProduct = async (req, res) => {
   }
 }
 
-const getProducts = async (req, res) => {
+const getProductsByStorage = async (req, res) => {
   const filterConditions = {};
   const isStorageSpecified = req.query.isStorageSpecified;
 
@@ -143,12 +143,26 @@ const exportProducts = async (req, res) => {
   }
 }
 
+const getProducts = async (req, res) => {
+  try {
+    const products = await Supplier.find();
+
+    if (!products) return res.status(404).json({ messege: 'product not found' })
+
+    res.json(products)
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
+
+
 
 module.exports = {
   createProduct,
   getProduct,
   deleteProduct,
   updateProduct,
-  getProducts,
+  getProductsByStorage,
   exportProducts,
+  getProducts
 }

@@ -97,7 +97,7 @@ const getPossibleTestsCountById = async (req, res) => {
         expirationDate: { $gte: expirationDate }
       }))
     )).filter(product => product != null);
-  
+
     if (existingQuantities.length != test.products.length) return res.status(500).json({ message: 'Not enough products' });
 
     const possibleCountOfTests = Math.min(...test.products.map((product, idx) => parseInt(existingQuantities[idx].quantity / product.quantity)));
@@ -119,12 +119,11 @@ const getPossibleTestsCountByName = async (req, res) => {
     const existingQuantities = (await Promise.all(
       test.products.map(product => Product.find({
         name: product.name,
+        totalQuantity: {$group: { _id: product.name, totalQuantity: { $sum: "$quantity" } }},
         expirationDate: { $gte: expirationDate },
-        $group: { _id: product.name, totalQuantity: { $sum: "$quantity" } }
       }))
     )).filter(product => product != null);
-
-  
+    
     if (existingQuantities.length != test.products.length) return res.status(500).json({ message: 'Not enough products' });
 
     const possibleCountOfTests = Math.min(...test.products.map((product, idx) => parseInt(existingQuantities[idx].totalQuantity / product.quantity)));
@@ -142,6 +141,8 @@ const makeTest = async (req, res) => {
       name,
       type,
       deviceName,
+      quantity,
+      packingType,
       dateOfEntry
     } = req.body
 
@@ -153,7 +154,9 @@ const makeTest = async (req, res) => {
       dateOfEntry,
       name,
       type,
+      quantity,
       deviceName,
+      packingType,
       isMaked: true
     });
 
@@ -184,10 +187,10 @@ const exportTests = async (req, res) => {
     
     try {
       const csv = parse(tests, opts);
-      fs.writeFile("tests.csv", csv, function(error){
+      fs.writeFile("test.csv", csv, function(error){
         if (error) throw error
       })
-      res.status(200).json({ message: 'Success' });
+      res.status(200).json({ message: "success" });
     } catch (err) {
       res.status(500).json({ message: "something went wrong" })
     }
@@ -215,6 +218,8 @@ const exportMakedTests = async (req, res) => {
     res.status(500).json({ message: "something went wrong" })
   }
 }
+
+
 
 
 module.exports = {
