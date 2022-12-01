@@ -3,6 +3,7 @@ const Product = require("../models/product.model");
 const fs = require('fs');
 const { parse } = require('json2csv');
 
+
 const createTest = async (req, res) => {
   try {
     const {
@@ -181,7 +182,7 @@ const checkTestPrice = async (req, res) => {
 
     if (existingPrices.length != test.products.length) return res.status(500).json({ message: 'Not enough products' });
 
-    const priceOfTests = Math.min(...test.products.map((product, idx) => parseInt(existingPrices[idx].price * product.quantity)));
+    const priceOfTests = Math.sum(...test.products.map((product, idx) => parseInt(existingPrices[idx].price * product.quantity)));
 
     return res.status(200).json({ price: priceOfTests });
   } catch (err) {
