@@ -94,12 +94,14 @@ const updateProduct = async (req, res) => {
     const updatedProduct = {
       name: req.body.name,
       type: req.body.type,
+      outputDescription: req.body.outputDescription,
       storage: req.body.storage,
       quantity: req.body.quantity,
       dateOfDestribution: req.body.dateOfDestribution,
       unit: req.body.unit,
       expirationDate: req.body.expirationDate,
       price: req.body.price,
+      outputDescription,
       supplier: req.body.supplier,
       dateOfEntry: req.body.dateOfEntry,
       lot: req.body.lot,
@@ -126,7 +128,7 @@ const exportProducts = async (req, res) => {
       filterConditions.storage = isStorageSpecified === '1' ? { $ne: null } : null 
     }
     const products = await Product.find()
-    const fields = ['name', 'type', 'quantity', 'unit', 'expirationDate', 'price', 'supplier', 'storage', 'dateOfEntry', 'material', 'dateOfDestribution', 'lot'];
+    const fields = ['name', 'type', 'quantity', 'unit', 'expirationDate', 'price', 'supplier', 'storage', 'dateOfEntry', 'material', 'dateOfDestribution', 'lot', 'outputDescription'];
     const opts = { fields };
     
     try {
@@ -134,7 +136,8 @@ const exportProducts = async (req, res) => {
       fs.writeFile("products.csv", csv, function(error){
         if (error) throw error
       })
-      res.status(200)
+      res.download('test.csv')
+      res.status(200).json({message: "sucess"})
     } catch (err) {
       res.status(500).json({ message: "something went wrong" })
     }

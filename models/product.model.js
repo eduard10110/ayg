@@ -12,7 +12,8 @@ const Product = new mongoose.Schema({
   dateOfEntry: {type: Date, required:true},
   material: {type: String},
   dateOfDestribution: {type: Date},
-  lot: {type: String}
+  lot: {type: String},
+  outputDescription: {type: String}
 })
 
 module.exports = mongoose.model('Product', Product)

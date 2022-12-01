@@ -86,7 +86,7 @@ const updateTest = async (req, res) => {
 
 const getPossibleTestsCountById = async (req, res) => {
   const {
-    expirationDate,
+    expirationDate
   } = req.body;
   const { testId } = req.params
   try {
@@ -166,6 +166,28 @@ const makeTest = async (req, res) => {
     res.status(500).json({ message: 'Failed' });
   }
 } 
+const checkTestPrice = async (req, res) => {
+  const {
+    productData
+  } = req.body;
+  const { testId } = req.params
+  try {
+    const test = await Test.findById(testId)
+    const existingPrices = (await Promise.all(
+      productData.map(product => Product.findOne({
+        _id: product.id,
+      }))
+    )).filter(product => product != null);
+
+    if (existingPrices.length != test.products.length) return res.status(500).json({ message: 'Not enough products' });
+
+    const priceOfTests = Math.min(...test.products.map((product, idx) => parseInt(existingPrices[idx].price * product.quantity)));
+
+    return res.status(200).json({ price: priceOfTests });
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" })
+  }
+}
 
 const getMakedTests = async (req, res) => {
   try {
@@ -190,8 +212,10 @@ const exportTests = async (req, res) => {
       fs.writeFile("test.csv", csv, function(error){
         if (error) throw error
       })
-      res.status(200).json({ message: "success" });
+      res.download('test.csv')
+      res.status(200).json({message: "success" })
     } catch (err) {
+      console.log(err)
       res.status(500).json({ message: "something went wrong" })
     }
   } catch (error) {
@@ -210,6 +234,7 @@ const exportMakedTests = async (req, res) => {
       fs.writeFile("tests.csv", csv, function(error){
         if (error) throw error
       })
+      res.download('test.csv')
       res.status(200).json({ message: 'Success' });
     } catch (err) {
       res.status(500).json({ message: "something went wrong" })
@@ -222,12 +247,15 @@ const exportMakedTests = async (req, res) => {
 
 
 
+
+
 module.exports = {
   createTest,
   getTest,
   getMakedTests,
   deleteTest,
   makeTest,
+  checkTestPrice,
   exportTests,
   updateTest,
   getPossibleTestsCountById,
