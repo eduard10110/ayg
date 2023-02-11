@@ -11,11 +11,13 @@ const { testRouter } = require("./routers/test.router");
 const { consumableRouter } = require("./routers/consumable.router");
 const { repositoryRouter } = require("./routers/repository.router");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/files", express.static(path.join(__dirname, "reports")));
 
 app.use("/product", productRouter);
 app.use("/supplier", supplierRouter);

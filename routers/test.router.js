@@ -1,36 +1,33 @@
-const { createTest,
+const {
+  createTest,
   getTest,
   deleteTest,
   makeTest,
   exportTests,
   getMakedTests,
-  updateTest, 
+  updateTest,
   checkTestPrice,
   getPossibleTestsCountById,
   getPossibleTestsCountByName,
   exportMakedTests,
-  getTests
-} = require('../controllers/test.controller')
+  getTests,
+} = require("../controllers/test.controller");
 
+const { Router } = require("express");
 
-const { Router } = require('express')
+const testRouter = Router();
 
+testRouter.post("/", createTest);
+testRouter.get("/:testId", getTest);
+testRouter.post("/make", getMakedTests);
+testRouter.post("/:testId/check", checkTestPrice);
+testRouter.post("/make/export", exportTests);
+testRouter.delete("/:testId", deleteTest);
+testRouter.put("/:testId", updateTest);
+testRouter.post("/:testId/possible-count-by-id", getPossibleTestsCountById);
+testRouter.post("/:testId/possible-count-by-name", getPossibleTestsCountByName);
+testRouter.post("/maked/export", exportMakedTests);
+testRouter.get("/", getTests);
+testRouter.post("/make/makeTest", makeTest);
 
-const testRouter = Router()
-
-testRouter.post('/', createTest)
-testRouter.get('/:testId', getTest)
-testRouter.post('/make', getMakedTests)  
-testRouter.post('/:testId/chake', checkTestPrice)
-testRouter.post('/make/export', exportTests); 
-testRouter.delete('/:testId', deleteTest)
-testRouter.put('/:testId', updateTest)
-testRouter.post('/:testId/possible-count-by-id', getPossibleTestsCountById);
-testRouter.post('/:testId/possible-count-by-name', getPossibleTestsCountByName);
-testRouter.post('/maked/export', exportMakedTests); 
-testRouter.get('/', getTests)
-testRouter.post('/make/makeTest', makeTest)
-
-
-
-module.exports = { testRouter }
+module.exports = { testRouter };

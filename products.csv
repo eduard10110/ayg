@@ -1,0 +1,9 @@
+"name","type","quantity","unit","expirationDate","price","supplier","storage","dateOfEntry","material","dateOfDestribution","lot","outputDescription"
+"Selpak-Selpak-","reagent",200,"l","2022-10-29T20:00:00.000Z",25000,"Test","storage1","2022-10-13T20:00:00.000Z",,,"test",
+"Selpak-Selpak-","reagent",200,"l","2022-10-29T20:00:00.000Z",25000,"Test",,"2022-10-13T20:00:00.000Z",,,"test",
+"Selpak-Testing Warning","reagent",20,"l","2023-10-30T20:00:00.000Z",45000,"ksmksd","storage3","2022-10-16T20:00:00.000Z",,,"test",
+"Selpak-Testing Warning","reagent",50,"l","2023-10-30T20:00:00.000Z",45000,"ksmksd","2","2022-10-16T20:00:00.000Z",,,"test",
+"Selpak-Testing Warning","reagent",1000,"l","2023-10-30T20:00:00.000Z",45000,"ksmksd","","2022-10-16T20:00:00.000Z",,,"test",
+"Selpak-Testing Warning","reagent",8630,"l","2023-10-30T20:00:00.000Z",45000,"ksmksd",,"2022-10-16T20:00:00.000Z",,,"test",
+"Selpak-Testing Warning","reagent",80000,"l","2023-10-30T20:00:00.000Z",45000,"ksmksd","2","2022-10-16T20:00:00.000Z",,,"test",
+"Nurofen-200","consumable",800,"մլ","2022-11-24T20:00:00.000Z",25000,"skmsd",,"2022-11-16T20:00:00.000Z",,,"lot",
